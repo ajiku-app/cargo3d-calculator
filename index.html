@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cargo3D Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-lang">
+      <div class="lang-toggle">
+        <button class="lang-btn" id="loginLangID" onclick="setLang('id')">ID</button>
+        <button class="lang-btn" id="loginLangEN" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+    <div class="login-brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7l9 5 9-5M12 12v10" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <h1>Cargo3D Calculator</h1>
+        <div class="sub" data-i18n="login_subtitle">Masuk untuk melanjutkan</div>
+      </div>
+    </div>
+    <div class="login-error" id="loginError"></div>
+    <div>
+      <div class="field">
+        <label data-i18n="login_username_label">Nama Pengguna</label>
+        <input type="text" id="loginUsername" data-i18n-placeholder="login_username_placeholder" placeholder="masukan username anda" autocomplete="username" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label data-i18n="login_password_label">Kata Sandi</label>
+        <input type="password" id="loginPassword" data-i18n-placeholder="login_password_placeholder" placeholder="Masukkan kata sandi" autocomplete="current-password" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
+      </div>
+      <button type="button" class="btn btn-primary btn-block" style="margin-top:18px;" onclick="tryLogin()"><span data-i18n="login_btn">Masuk</span></button>
+    </div>
+    <div class="login-hint" data-i18n="Aplikasi Cardo3D Calculator V.1.0 by DSA"></div>
+  </div>
+</div>
+<div class="overlay-mask" id="overlayMask"></div>
+<div class="shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7l9 5 9-5M12 12v10" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Cargo3D Calculator</div>
+        <div class="brand-sub">STANDALONE · V1.0</div>
+      </div>
+    </div>
+    <nav id="navList"></nav>
+    <div class="side-foot">
+      <div class="avatar" id="userAvatar">A</div>
+      <div>
+        <div class="side-foot-name" id="userNameLabel">Administrator Utama</div>
+        <div class="side-foot-role" id="userRoleLabel">Admin</div>
+      </div>
+      <button class="logout-btn" id="logoutBtn" onclick="tryLogout()" title="Keluar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="hamburger" id="hamburgerBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </div>
+        <div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-date" id="pageDate"></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="langID" onclick="setLang('id')">ID</button>
+          <button class="lang-btn" id="langEN" onclick="setLang('en')">EN</button>
+        </div>
+        <div class="db-badge"><span class="dot"></span><span data-i18n="db_status">Database: Lokal (Browser)</span></div>
+      </div>
+    </div>
+    <div class="content" id="content">
+      <section class="view" id="view-dashboard">
+        <div class="grid-4" style="margin-bottom:16px;">
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="dash_master">Barang di Master</div>
+            <div class="stat-value" id="dashMasterCount">0</div>
+            <div class="stat-sub" data-i18n="dash_master_sub">Jenis barang terdaftar</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="dash_riwayat">Riwayat Muat</div>
+            <div class="stat-value" id="dashRiwayatCount">0</div>
+            <div class="stat-sub" data-i18n="dash_riwayat_sub">Sesi perhitungan tersimpan</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="dash_avgvol">Rata-rata Util. Volume</div>
+            <div class="stat-value" id="dashAvgVol">–</div>
+            <div class="stat-sub" data-i18n="dash_avg_sub">Dari seluruh riwayat</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" data-i18n="dash_avgweight">Rata-rata Util. Berat</div>
+            <div class="stat-value" id="dashAvgWeight">–</div>
+            <div class="stat-sub" data-i18n="dash_avg_sub2">Dari seluruh riwayat</div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z"/></svg>
+                <span data-i18n="dash_quickstart_title">Mulai Cepat</span>
+              </div>
+            </div>
+            <p class="text-dim" style="margin:0 0 16px; font-size:13px; line-height:1.6;" data-i18n="dash_quickstart_desc">Hitung dan visualisasikan simulasi muat kargo dalam kontainer 3D dalam hitungan detik.</p>
+            <button class="btn btn-primary btn-block" onclick="navigate('kalkulator')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              <span data-i18n="dash_quickstart_btn">Buka Kalkulator & 3D</span>
+            </button>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"/></svg>
+                <span data-i18n="dash_recent_title">Riwayat Terbaru</span>
+              </div>
+              <button class="link-btn" onclick="navigate('riwayat')" data-i18n="dash_seeall">Lihat semua →</button>
+            </div>
+            <div id="dashRecentList"></div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-kalkulator">
+        <div class="calc-layout">
+          <div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6"/></svg>
+                  <span data-i18n="calc_add_title">Pilih & Tambah Barang</span>
+                </div>
+                <button class="link-btn" id="toggleCustomBtn" onclick="toggleCustomInput()">+ <span data-i18n="calc_custom_input">Input Kustom</span></button>
+              </div>
+              <div id="masterSelectBlock">
+                <div class="field">
+                  <label data-i18n="calc_pick_master">Pilih dari Database Master</label>
+                  <select id="masterSelect" onchange="onMasterSelect()"></select>
+                </div>
+              </div>
+              <div id="customInputBlock" style="display:none;">
+                <div class="field">
+                  <label data-i18n="calc_custom_name">Nama Barang</label>
+                  <input type="text" id="customName" placeholder="Contoh: Dus Elektronik">
+                </div>
+                <div class="row-3">
+                  <div class="field">
+                    <label>P (cm)</label>
+                    <input type="number" id="customL" placeholder="40" min="1">
+                  </div>
+                  <div class="field">
+                    <label>L (cm)</label>
+                    <input type="number" id="customW" placeholder="30" min="1">
+                  </div>
+                  <div class="field">
+                    <label>T (cm)</label>
+                    <input type="number" id="customH" placeholder="30" min="1">
+                  </div>
+                </div>
+              </div>
+              <div class="row-2">
+                <div class="field">
+                  <label data-i18n="calc_qty">Jumlah Unit (Pcs)</label>
+                  <input type="number" id="qtyInput" placeholder="Contoh: 150" min="1" oninput="recalcWeightSuggestion()">
+                </div>
+                <div class="field">
+                  <label data-i18n="calc_weight">Total Berat Tambahan</label>
+                  <div class="input-suffix">
+                    <input type="number" id="weightInput" placeholder="Berat total kg" min="0">
+                    <span>KG</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-block" onclick="addToLoadList()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                <span data-i18n="calc_add_btn">Masukkan Ke Daftar Muat</span>
+              </button>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-title">
+                  <span data-i18n="calc_list_title">Daftar Barang yang Dimasukkan</span>
+                  <span class="pill pill-purple" id="loadListCount">(0)</span>
+                </div>
+                <button class="link-btn danger" onclick="clearLoadList()" data-i18n="calc_clear_all">Hapus Semua</button>
+              </div>
+              <div class="tbl-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th data-i18n="th_name">Nama Barang</th>
+                      <th data-i18n="th_size">Ukuran (cm)</th>
+                      <th data-i18n="th_qty">Jumlah</th>
+                      <th data-i18n="th_weight">Berat (kg)</th>
+                      <th data-i18n="th_action">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="loadListBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="loadListEmpty" style="display:none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                <p data-i18n="calc_list_empty">Belum ada barang di daftar muat.</p>
+              </div>
+              <div class="field" style="margin-top:14px; margin-bottom:0;">
+                <label data-i18n="calc_project_name">Nama Proyek (opsional)</label>
+                <input type="text" id="projectNameInput" placeholder="Contoh: Pengiriman Q3 - Gudang Jakarta">
+              </div>
+              <div style="display:flex; gap:10px; margin-top:16px;">
+                <button class="btn btn-green" style="flex:1;" onclick="runCalculation()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 00-2 2v4m18 0V5a2 2 0 00-2-2h-4m0 18h4a2 2 0 002-2v-4M3 15v4a2 2 0 002 2h4"/></svg>
+                  <span data-i18n="calc_run_btn">Hitung (3D)</span>
+                </button>
+                <button class="btn btn-outline" style="flex:1;" onclick="saveCurrentSession()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                  <span data-i18n="calc_save_btn">Simpan</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="viz-wrap" id="vizWrap">
+              <div id="canvasHost"></div>
+              <button class="viz-fs-btn" id="vizFsBtn" onclick="toggleVizFullscreen()" title="Layar Penuh">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+              </button>
+              <div class="viz-hint" data-i18n="viz_hint">Seret untuk putar · Scroll untuk zoom</div>
+              <div class="axis-legend">
+                <div><span class="axis-swatch" style="background:#f0506e;"></span><span data-i18n="axis_x">Sisi Panjang (X)</span></div>
+                <div><span class="axis-swatch" style="background:#22c55e;"></span><span data-i18n="axis_y">Sisi Lebar (Y)</span></div>
+                <div><span class="axis-swatch" style="background:#3b82f6;"></span><span data-i18n="axis_z">Sisi Tinggi (Z)</span></div>
+              </div>
+              <div class="viz-empty-overlay" id="vizEmptyOverlay">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>
+                <p data-i18n="viz_empty" style="margin:0; font-size:12.5px;">Tambahkan barang lalu klik "Hitung (3D)" untuk melihat simulasi muat.</p>
+              </div>
+            </div>
+            <div class="color-legend" id="colorLegend"></div>
+            <div class="grid-2" style="margin-top:16px;">
+              <div class="stat-card util-card">
+                <div class="stat-label" data-i18n="util_volume">Utilisasi Volume Kontainer</div>
+                <div class="stat-value"><span id="volPct">0%</span></div>
+                <div class="bar-track"><div class="bar-fill" id="volBar" style="width:0%; background:linear-gradient(90deg,#7c4dff,#9166ff);"></div></div>
+                <div class="stat-sub"><span data-i18n="util_total_filled">Total Diisi</span>: <b id="volFilled" class="text-dim">0.00 m³</b></div>
+                <div class="stat-sub"><span data-i18n="util_remaining">Sisa Ruang Kosong</span>: <b id="volRemain" class="text-dim">0.00 m³</b></div>
+              </div>
+              <div class="stat-card util-card">
+                <div class="stat-label" data-i18n="util_weight">Utilisasi Beban Berat</div>
+                <div class="stat-value"><span id="weightPct">0%</span></div>
+                <div class="bar-track"><div class="bar-fill" id="weightBar" style="width:0%; background:linear-gradient(90deg,#22c55e,#16a34a);"></div></div>
+                <div class="stat-sub"><span data-i18n="util_total_load">Total Beban</span>: <b id="weightFilled" class="text-dim">0.0 kg</b></div>
+                <div class="stat-sub"><span data-i18n="util_remaining_safe">Sisa Batas Aman</span>: <b id="weightRemain" class="text-dim">0.0 kg</b></div>
+              </div>
+            </div>
+            <div class="grid-2" style="margin-top:12px;">
+              <div class="stat-card util-card">
+                <div class="stat-label" data-i18n="util_density">Kerapatan Susunan Aktual</div>
+                <div class="stat-value"><span id="densityPct">0%</span></div>
+                <div class="bar-track"><div class="bar-fill" id="densityBar" style="width:0%; background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+                <div class="stat-sub" data-i18n="util_density_desc">Volume unit yang berhasil disusun ÷ volume kontainer (memperhitungkan celah antar susunan).</div>
+              </div>
+              <div class="stat-card util-card">
+                <div class="stat-label" data-i18n="util_unfit">Unit Tidak Termuat</div>
+                <div class="stat-value"><span id="unfitCount" style="color:var(--red);">0</span></div>
+                <div class="stat-sub" data-i18n="util_unfit_desc">Melebihi kapasitas ruang atau berat kontainer.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-laporan">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6M9 9h1"/></svg>
+              <span data-i18n="lap_title">Laporan Muat</span>
+            </div>
+          </div>
+          <div class="field no-print" style="max-width:420px;">
+            <label data-i18n="lap_pick">Pilih Sesi Riwayat</label>
+            <select id="laporanSelect" onchange="renderLaporan()"></select>
+          </div>
+          <div id="laporanBody"></div>
+        </div>
+      </section>
+      <section class="view" id="view-master">
+        <div class="grid-2" style="align-items:start;">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12l8.73-5.04M12 22.08V12"/></svg>
+                <span id="masterFormTitle" data-i18n="master_add_title">Tambah Barang Master</span>
+              </div>
+            </div>
+            <div class="field">
+              <label data-i18n="master_name">Nama Barang</label>
+              <input type="text" id="mName" placeholder="Contoh: Karton Kopi Instan">
+            </div>
+            <div class="row-3">
+              <div class="field"><label>P (cm)</label><input type="number" id="mL" min="1"></div>
+              <div class="field"><label>L (cm)</label><input type="number" id="mW" min="1"></div>
+              <div class="field"><label>T (cm)</label><input type="number" id="mH" min="1"></div>
+            </div>
+            <div class="field">
+              <label data-i18n="master_weight_unit">Berat per Unit (kg)</label>
+              <input type="number" id="mWeight" min="0" step="0.1">
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-primary" style="flex:1;" onclick="saveMasterItem()" id="masterSaveBtn"><span data-i18n="master_save_btn">Simpan Barang</span></button>
+              <button class="btn btn-ghost" onclick="resetMasterForm()" id="masterCancelBtn" style="display:none;" data-i18n="master_cancel_btn">Batal</button>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title"><span data-i18n="master_list_title">Daftar Barang Master</span></div>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr>
+                  <th data-i18n="th_name">Nama Barang</th>
+                  <th data-i18n="th_size">Ukuran (cm)</th>
+                  <th data-i18n="master_weight_unit_short">Berat/Unit</th>
+                  <th data-i18n="th_action">Aksi</th>
+                </tr></thead>
+                <tbody id="masterListBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-riwayat">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"/></svg>
+              <span data-i18n="riw_title">Riwayat Muat</span>
+            </div>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th data-i18n="th_date">Tanggal</th>
+                <th data-i18n="th_items">Jml. Item</th>
+                <th data-i18n="util_volume_short">Util. Volume</th>
+                <th data-i18n="util_weight_short">Util. Berat</th>
+                <th data-i18n="th_action">Aksi</th>
+              </tr></thead>
+              <tbody id="riwayatListBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="riwayatEmpty" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8v4l3 3M12 3a9 9 0 100 18 9 9 0 000-18z"/></svg>
+            <p data-i18n="riw_empty">Belum ada riwayat perhitungan tersimpan.</p>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="view-pengaturan">
+        <div class="panel" style="max-width:560px;">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+              <span data-i18n="set_title">Pengaturan Kontainer</span>
+            </div>
+          </div>
+          <div class="field">
+            <label data-i18n="set_fleet_type">Jenis Armada</label>
+            <select id="setFleetType" onchange="applyFleetPreset()">
+              <option value="" data-i18n="set_fleet_custom_opt">— Kustom (isi manual) —</option>
+              <option value="cont40hc" data-i18n="set_fleet_cont40hc">Container 40ft High Cube</option>
+              <option value="cont20ft" data-i18n="set_fleet_cont20ft">Container 20ft</option>
+              <option value="wingbox" data-i18n="set_fleet_wingbox">Wingbox (BWB)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-i18n="set_container_name">Nama Kontainer</label>
+            <input type="text" id="setName">
+          </div>
+          <div class="row-3">
+            <div class="field"><label data-i18n="set_length">Panjang (cm)</label><input type="number" id="setL" min="1"></div>
+            <div class="field"><label data-i18n="set_width">Lebar (cm)</label><input type="number" id="setW" min="1"></div>
+            <div class="field"><label data-i18n="set_height">Tinggi (cm)</label><input type="number" id="setH" min="1"></div>
+          </div>
+          <div class="field">
+            <label data-i18n="set_maxweight">Berat Maksimum (kg)</label>
+            <input type="number" id="setMaxWeight" min="1">
+          </div>
+          <div class="field">
+            <p class="text-faint" style="font-size:11.5px; margin:0;" id="setVolumeInfo"></p>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()"><span data-i18n="set_save_btn">Simpan Pengaturan</span></button>
+        </div>
+        <div class="panel" style="max-width:840px; margin-top:16px;">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              <span data-i18n="set_user_section_title">Manajemen User</span>
+            </div>
+          </div>
+          <div class="grid-2" style="align-items:start;">
+            <div>
+              <div class="field">
+                <label data-i18n="user_name">Nama</label>
+                <input type="text" id="uName" placeholder="Contoh: Septa Aji">
+              </div>
+              <div class="field">
+                <label data-i18n="user_role">Role</label>
+                <select id="uRole">
+                  <option value="Admin">Admin</option>
+                  <option value="Staff">Staff</option>
+                </select>
+              </div>
+              <div class="field">
+                <label data-i18n="user_password">Kata Sandi Login</label>
+                <input type="password" id="uPassword" data-i18n-placeholder="user_password_placeholder" placeholder="Kosongkan jika tidak perlu kata sandi" autocomplete="new-password">
+              </div>
+              <button class="btn btn-primary btn-block" onclick="addUser()"><span data-i18n="user_add_btn">Tambah User</span></button>
+            </div>
+            <div>
+              <div class="panel-title" style="margin-bottom:12px;"><span data-i18n="user_list_title">Daftar User</span></div>
+              <div class="tbl-wrap">
+                <table>
+                  <thead><tr><th data-i18n="user_name">Nama</th><th data-i18n="user_role">Role</th><th data-i18n="th_action">Aksi</th></tr></thead>
+                  <tbody id="userListBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<div class="toast-host" id="toastHost"></div>
+<div class="modal-bg" id="confirmModal">
+  <div class="modal">
+    <h3 id="confirmTitle">Hapus item?</h3>
+    <p id="confirmDesc">Tindakan ini tidak dapat dibatalkan.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()" data-i18n="modal_cancel">Batal</button>
+      <button class="btn btn-danger-outline" id="confirmOkBtn" data-i18n="modal_confirm">Hapus</button>
+    </div>
+  </div>
+</div>
+<div class="modal-bg" id="pwdModal">
+  <div class="modal">
+    <h3 data-i18n="user_reset_pwd_title">Ubah Kata Sandi</h3>
+    <p data-i18n="user_reset_pwd_desc">Kosongkan untuk menghapus kata sandi (login tanpa kata sandi).</p>
+    <div class="field" style="margin-bottom:0;">
+      <label data-i18n="user_password">Kata Sandi Login</label>
+      <input type="password" id="pwdModalInput" autocomplete="new-password">
+    </div>
+    <div class="modal-actions" style="margin-top:18px;">
+      <button class="btn btn-ghost" onclick="closePwdModal()" data-i18n="modal_cancel">Batal</button>
+      <button class="btn btn-primary" onclick="savePwdModal()" data-i18n="user_save_pwd_btn">Simpan</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
