@@ -6,11 +6,12 @@
 <title>Cargo3D Calculator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="login-screen" id="loginScreen">
+  <div class="login-bg"></div>
   <div class="login-card">
     <div class="login-lang">
       <div class="lang-toggle">
@@ -18,28 +19,34 @@
         <button class="lang-btn" id="loginLangEN" onclick="setLang('en')">EN</button>
       </div>
     </div>
-    <div class="login-brand">
-      <div class="brand-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/><path d="M3 7l9 5 9-5M12 12v10" stroke="#fff" stroke-width="1.7" stroke-linejoin="round"/></svg>
+    <div class="login-side">
+      <div class="login-logo">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="8" width="13" height="4.5" rx="1"/><path d="M3.5 12.5V19a1 1 0 001 1h10a1 1 0 001-1v-6.5"/><path d="M7 15.5h5"/><rect x="13" y="3" width="8.5" height="12" rx="1.2" fill="rgba(255,255,255,.08)"/><path d="M17.25 12.5v-6M14.8 8.6l2.45-2.5 2.45 2.5"/></svg>
       </div>
-      <div>
-        <h1>Cargo3D Calculator</h1>
-        <div class="sub" data-i18n="login_subtitle">Masuk untuk melanjutkan</div>
+      <h1 class="login-title">Cargo3D Calculator</h1>
+      <p class="login-tagline" data-i18n="login_subtitle">Sistem Kalkulasi &amp; Visualisasi Kontainer 3D</p>
+      <div class="login-meta">
+        <div class="login-meta-row"><span>MANIFEST</span><span>ACCESS-TERMINAL</span></div>
+        <div class="login-meta-row"><span>STATUS</span><span class="ready"><i></i>READY</span></div>
+        <div class="login-meta-row"><span>BUILD</span><span>Cargo3D Loader V2.1 Pro</span></div>
       </div>
     </div>
-    <div class="login-error" id="loginError"></div>
-    <div>
-      <div class="field">
-        <label data-i18n="login_username_label">Nama Pengguna</label>
-        <input type="text" id="loginUsername" data-i18n-placeholder="login_username_placeholder" placeholder="masukan username anda" autocomplete="username" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
+    <div class="login-form">
+      <div class="login-kicker" data-i18n="login_kicker">MASUK TERMINAL</div>
+      <h2 class="login-heading" data-i18n="login_heading">Verifikasi kredensial operator</h2>
+      <div class="login-error" id="loginError"></div>
+      <label class="lg-label" for="loginUsername" data-i18n="login_username_label">Username</label>
+      <div class="lg-input">
+        <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2"/><path d="M4 21c0-4.2 3.6-6.8 8-6.8s8 2.6 8 6.8z"/></svg>
+        <input type="text" id="loginUsername" data-i18n-placeholder="login_username_placeholder" placeholder="Masukkan username" autocomplete="username" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
       </div>
-      <div class="field" style="margin-bottom:0;">
-        <label data-i18n="login_password_label">Kata Sandi</label>
-        <input type="password" id="loginPassword" data-i18n-placeholder="login_password_placeholder" placeholder="Masukkan kata sandi" autocomplete="current-password" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
+      <label class="lg-label" for="loginPassword" data-i18n="login_password_label">Password</label>
+      <div class="lg-input">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 10V8a6 6 0 1112 0v2h1a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1v-9a1 1 0 011-1zm2 0h8V8a4 4 0 10-8 0z"/></svg>
+        <input type="password" id="loginPassword" data-i18n-placeholder="login_password_placeholder" placeholder="Masukkan password" autocomplete="current-password" onkeydown="if(event.key==='Enter'){ event.preventDefault(); tryLogin(); }">
       </div>
-      <button type="button" class="btn btn-primary btn-block" style="margin-top:18px;" onclick="tryLogin()"><span data-i18n="login_btn">Masuk</span></button>
+      <button type="button" class="lg-btn" onclick="tryLogin()"><span data-i18n="login_btn">Masuk Aplikasi</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 012 2v12a2 2 0 01-2 2h-4"/><path d="M4 12h11M11 8l4 4-4 4"/></svg></button>
     </div>
-    <div class="login-hint" data-i18n="Aplikasi Cardo3D Calculator V.1.0 by DSA"></div>
   </div>
 </div>
 <div class="overlay-mask" id="overlayMask"></div>
