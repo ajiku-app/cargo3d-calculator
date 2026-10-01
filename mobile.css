@@ -1,0 +1,53 @@
+/* Tampilan mobile (iOS/Android): tema Eco Green, tab bar bawah, kartu putih membulat.
+   Dimuat hanya saat lebar layar <= 880px. */
+:root{
+  --bg:#bfeadb; --panel:#ffffff; --panel-2:#f1faf5; --brand:#1f7a52; --border:#cfe8dc; --border-soft:#dcefe5;
+  --text:#0f3d2a; --text-dim:#3f6b57; --text-faint:#6f9684;
+  --purple:#1f7a52; --purple-2:#2a9566; --purple-dim:#175c3d; --radius:18px; --radius-sm:12px;
+  color-scheme:light;
+}
+body{background:var(--bg); color:var(--text); -webkit-tap-highlight-color:transparent;}
+.topbar{background:var(--brand); color:#fff; border:0; border-radius:0 0 26px 26px; padding:calc(14px + env(safe-area-inset-top)) 18px 16px; flex-wrap:nowrap; box-shadow:0 8px 22px rgba(31,122,82,.25);}
+.page-title{font-size:20px; color:#fff;} .page-date{color:#bfeadb;}
+.hamburger,.db-badge,.topbar .lang-toggle{display:none !important;}
+.m-logout{display:flex; width:38px; height:38px; border-radius:50%; border:0; background:rgba(255,255,255,.18); color:#fff; align-items:center; justify-content:center;}
+.content{padding:18px 14px calc(104px + env(safe-area-inset-bottom));}
+.panel,.card,.stat,.stat-card{background:#fff; border:0; border-radius:20px; box-shadow:0 6px 18px rgba(31,122,82,.12);}
+.btn-primary,.lg-btn{background:var(--brand) !important; color:#fff !important; border:0; border-radius:999px; box-shadow:0 6px 14px rgba(31,122,82,.3);}
+.btn,.lang-btn{border-radius:999px;}
+input,select,textarea{border-radius:14px !important;}
+/* Sidebar menjadi tab bar bawah */
+.sidebar{top:auto !important; left:10px; right:10px; bottom:calc(8px + env(safe-area-inset-bottom)); width:auto; height:auto; transform:none !important; flex-direction:row; background:var(--brand); border:0; border-radius:26px; box-shadow:0 10px 28px rgba(15,61,42,.35); z-index:60;}
+.sidebar .brand,.side-foot,.nav-divider{display:none !important;}
+nav#navList{display:flex; width:100%; padding:7px 6px; gap:2px; overflow:visible; flex:1;}
+.nav-item{flex:1 1 0; min-width:0; flex-direction:row; gap:6px; padding:12px 0; margin:0; font-size:11.5px; font-weight:700; justify-content:center; color:#c5ecd9; border-radius:999px; transition:flex .2s;}
+.nav-item span{display:none; white-space:nowrap;}
+.nav-item.active{flex:0 0 auto; padding:12px 14px;}
+.nav-item.active span{display:inline;}
+.nav-item svg{width:21px; height:21px;}
+.nav-item:hover{background:transparent; color:#fff;}
+.nav-item.active{background:#fff; color:var(--brand); border-color:transparent;}
+.nav-item.active svg{color:var(--brand);}
+.overlay-mask{display:none !important;}
+/* Layar sambutan */
+.m-splash{position:fixed; inset:0; z-index:300; background:var(--bg); display:flex; flex-direction:column; padding:calc(22px + env(safe-area-inset-top)) 22px calc(26px + env(safe-area-inset-bottom));}
+.m-splash-card{flex:1; background:var(--brand); border-radius:34px; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:30px 26px; box-shadow:0 14px 36px rgba(15,61,42,.3);}
+.m-splash-icon{width:96px; height:96px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:26px;}
+.m-splash h1{margin:0 0 4px; font-size:30px; letter-spacing:-.02em;} .m-splash h1 span{display:block; font-weight:500; opacity:.8; font-size:22px;}
+.m-splash p{margin:16px 0 24px; max-width:260px; line-height:1.55; color:#d3f2e3; font-size:14px;}
+.m-dots{display:flex; gap:7px;} .m-dots i{width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.4);} .m-dots i:first-child{background:#fff;}
+.m-splash-btn{margin-top:18px; border:0; background:#fff; color:var(--brand); font-weight:800; font-size:14px; padding:16px; border-radius:999px; width:100%;}
+/* Login */
+.login-card{background:rgba(255,255,255,.94) !important; color:var(--text); border:0 !important; border-radius:30px !important;}
+.login-side{background:var(--brand); color:#fff; border-radius:30px 30px 0 0;}
+.login-form,.login-heading,.lg-label{color:var(--text) !important;}
+.lg-label,.login-kicker{color:var(--brand) !important;}
+
+.lang-btn.active{background:var(--brand) !important; color:#fff !important;}
+.login-lang .lang-btn.active{background:#fff !important; color:var(--brand) !important;}
+
+html,body{overflow-x:hidden; max-width:100vw;}
+.main,.content,.view,.panel{min-width:0; max-width:100%;}
+input,select,textarea{min-width:0; max-width:100%; background:#f1faf5 !important; color:var(--text) !important; border:1px solid var(--border) !important;}
+.panel{overflow-x:auto;}
+.panel table{width:100%; font-size:12.5px;}

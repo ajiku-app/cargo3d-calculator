@@ -1,7 +1,7 @@
 {
   "name": "cargo3d-calculator",
   "productName": "Cargo3D Calculator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Sistem kalkulasi dan visualisasi muatan kontainer 3D",
   "author": "Septa Aji",
   "license": "MIT",

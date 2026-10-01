@@ -1,9 +1,11 @@
-const CACHE_NAME = 'cargo3d-v1';
+const CACHE_NAME = 'cargo3d-v2';
 const CORE_FILES = [
   './',
   'index.html',
   'style.css',
   'app.js',
+  'mobile.css',
+  'mobile.js',
   'login-bg.jpg',
   'manifest.webmanifest',
   'icons/icon.svg',

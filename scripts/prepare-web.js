@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const out = path.join(root, 'app');
 
-const FILES = ['index.html', 'style.css', 'app.js', 'login-bg.jpg'];
+const FILES = ['index.html', 'style.css', 'app.js', 'mobile.css', 'mobile.js', 'login-bg.jpg'];
 const DIRS = ['icons'];
 const CDN_TAG = /<script src="https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\/three\.js\/r128\/three\.min\.js"><\/script>/;
 
