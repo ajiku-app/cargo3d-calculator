@@ -1,0 +1,67 @@
+{
+  "name": "cargo3d-calculator",
+  "productName": "Cargo3D Calculator",
+  "version": "1.0.0",
+  "description": "Sistem kalkulasi dan visualisasi muatan kontainer 3D",
+  "author": "Septa Aji",
+  "license": "MIT",
+  "main": "main.js",
+  "homepage": "https://github.com/ajiku-app/cargo3d-calculator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajiku-app/cargo3d-calculator.git"
+  },
+  "scripts": {
+    "prepare-web": "node scripts/prepare-web.js",
+    "start": "npm run prepare-web && electron .",
+    "dist": "npm run prepare-web && electron-builder --win --publish never",
+    "release": "npm run prepare-web && electron-builder --win --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "three": "0.128.0"
+  },
+  "build": {
+    "appId": "com.ajikuapp.cargo3d",
+    "productName": "Cargo3D Calculator",
+    "copyright": "Copyright 2026 Septa Aji",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Cargo3D-Calculator-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "deleteAppDataOnUninstall": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Cargo3D Calculator"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ajiku-app",
+        "repo": "cargo3d-calculator",
+        "releaseType": "release"
+      }
+    ]
+  }
+}
