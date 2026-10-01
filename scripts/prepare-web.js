@@ -31,6 +31,21 @@ if (!CDN_TAG.test(html)) {
   process.exit(1);
 }
 html = html.replace(CDN_TAG, '<script src="vendor/three.min.js"></script>');
+
+// Label versi di halaman login dan sidebar mengikuti "version" di package.json,
+// jadi cukup ubah versi di satu tempat saat merilis.
+const version = require(path.join(root, 'package.json')).version;
+const VERSION_LABELS = [
+  [/STANDALONE · V[\d.]+/, 'STANDALONE · V' + version],
+  [/Cargo3D Loader V[\d.]+( Pro)?/, 'Cargo3D Loader V' + version + ' Pro']
+];
+for (const [pattern, replacement] of VERSION_LABELS) {
+  if (!pattern.test(html)) {
+    console.error('Label versi tidak ditemukan di index.html: ' + pattern);
+    process.exit(1);
+  }
+  html = html.replace(pattern, replacement);
+}
 fs.writeFileSync(htmlPath, html);
 
 console.log('Folder app/ siap.');

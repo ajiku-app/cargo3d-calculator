@@ -36,7 +36,7 @@
       <div class="login-meta">
         <div class="login-meta-row"><span>MANIFEST</span><span>ACCESS-TERMINAL</span></div>
         <div class="login-meta-row"><span>STATUS</span><span class="ready"><i></i>READY</span></div>
-        <div class="login-meta-row"><span>BUILD</span><span>Cargo3D Loader V2.1 Pro</span></div>
+        <div class="login-meta-row"><span>BUILD</span><span id="appBuildLabel">Cargo3D Loader V2.1 Pro</span></div>
       </div>
     </div>
     <div class="login-form">
@@ -66,7 +66,7 @@
       </div>
       <div>
         <div class="brand-name">Cargo3D Calculator</div>
-        <div class="brand-sub">STANDALONE · V1.0</div>
+        <div class="brand-sub" id="appBrandSub">STANDALONE · V1.0</div>
       </div>
     </div>
     <nav id="navList"></nav>
@@ -486,6 +486,23 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="app.js"></script>
+<script>
+// Versi web: label versi mengikuti "version" di package.json (satu sumber dengan versi desktop).
+// Di aplikasi desktop, label sudah diisi saat build, jadi bagian ini dilewati.
+(function () {
+  if (window.cargo3dDesktop || !window.fetch) return;
+  fetch('package.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (pkg) {
+      if (!pkg || !pkg.version) return;
+      var brand = document.getElementById('appBrandSub');
+      var build = document.getElementById('appBuildLabel');
+      if (brand) brand.textContent = 'STANDALONE \u00b7 V' + pkg.version;
+      if (build) build.textContent = 'Cargo3D Loader V' + pkg.version + ' Pro';
+    })
+    .catch(function () {});
+})();
+</script>
 <script>
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', function () {
